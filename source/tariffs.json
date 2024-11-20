@@ -33,6 +33,21 @@
       "category": "Парфюмерия",
       "avia": 300,
       "auto": null
+    },
+    "7": {
+      "category": "Телефоны",
+      "avia": 155,
+      "auto": 85
+    },
+    "8": {
+      "category": "Косметика",
+      "avia": 220,
+      "auto": 95
+    },
+    "9": {
+      "category": "Платья",
+      "avia": 300,
+      "auto": 80
     }
   }
 }

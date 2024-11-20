@@ -1,6 +1,13 @@
 from dotenv import load_dotenv
 import os
 import json
+from datetime import datetime, timedelta
+
+def calc_date(plus):
+    current_date = datetime.now()
+    new_date1 = current_date + timedelta(days=int(plus[0]))
+    new_date2 = current_date + timedelta(days=int(plus[1]))
+    return (new_date1.strftime("%d.%m"), new_date2.strftime("%d.%m"))
 
 def update_yuan_rate(new_rate):
     try:
@@ -16,11 +23,14 @@ def update_yuan_rate(new_rate):
     except Exception as e:
         print(f"Error while updating YUAN_RATE: {e}")
 
+
 def load_tariffs():
     with open("source/tariffs.json", "r", encoding="utf-8") as file:
         data = json.load(file)
         return data
 
+
 def save_tariffs(data):
     with open("source/tariffs.json", "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
+

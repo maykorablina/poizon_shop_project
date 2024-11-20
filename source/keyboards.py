@@ -4,7 +4,7 @@ import yaml
 with open("source/texts.yaml", "r", encoding="utf-8") as file:
     text = yaml.safe_load(file)
 
-def main_keyboard(chat_id: int) -> InlineKeyboardMarkup:
+def main_keyboard(chat_id: int, admins: list[int]) -> InlineKeyboardMarkup:
 
     builder = InlineKeyboardBuilder()
     builder.row(
@@ -29,24 +29,46 @@ def main_keyboard(chat_id: int) -> InlineKeyboardMarkup:
         )
     )
 
-    if chat_id == 455153917:
+    if chat_id in admins:
         builder.row(
             InlineKeyboardButton(
                 text=f'Установить курс юаня', callback_data='set_rate',
             )
         )
+        builder.row(
+            InlineKeyboardButton(
+                text=f'Редактировать категории', callback_data='edit_categories_NOT TODay',
+            )
+        )
 
     return builder.as_markup()
 
-def categories_keyboard(categories:dict) -> InlineKeyboardMarkup:
+def categories_keyboard(categories:dict, cat_start:int, type:str) -> InlineKeyboardMarkup:
+    print(cat_start)
+    cat_items = list(categories.items())[cat_start:cat_start+4]
+    print(cat_items)
     builder = InlineKeyboardBuilder()
-    for id, cat in categories.items():
+    for id, cat in cat_items:
         builder.row(
             InlineKeyboardButton(
                 text=cat['category'],
                 callback_data=id
             )
         )
+    if cat_start == 0:
+        builder.row(
+            InlineKeyboardButton(text='>>>', callback_data=f'{type}_cat_next {cat_start+4}'),
+        )
+    elif cat_start+5 > len(categories):
+        builder.row(
+            InlineKeyboardButton(text='<<<', callback_data=f'{type}_cat_next {cat_start-4}'),
+        )
+    else:
+        builder.row(
+            InlineKeyboardButton(text='<<<', callback_data=f'{type}_cat_next {cat_start -4}'),
+            InlineKeyboardButton(text='>>>', callback_data=f'{type}_cat_next {cat_start + 4}'),
+        )
+
 
     return builder.as_markup()
 
@@ -71,9 +93,19 @@ def del_type_keyboard(categories:dict, cat_id) -> InlineKeyboardMarkup:
 def calculator_last_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.row(
-        InlineKeyboardButton(text='Оформить заказ', url='https://rutube.ru/video/c6cc4d620b1d4338901770a44b3e82f4/'),
+        InlineKeyboardButton(text=text['calculator']['make_order'], callback_data='make_order'),
     )
     builder.row(
-        InlineKeyboardButton(text='Рассчитать еще', callback_data='calculate'),
+        InlineKeyboardButton(text=text['calculator']['calc_again'], callback_data='calculate'),
+    )
+    return builder.as_markup()
+
+def subscribe_to_channel() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        InlineKeyboardButton(text=text['subscribe']['subscribe_button'], url=text['subscribe']['subscribe_link']),
+    )
+    builder.row(
+        InlineKeyboardButton(text=text['subscribe']['check_button'], callback_data='check_subscribe'),
     )
     return builder.as_markup()
