@@ -2,6 +2,16 @@ from dotenv import load_dotenv
 import os
 import json
 from datetime import datetime, timedelta
+import re
+
+
+def round_to_50(number):
+    return ((number + 49) // 50) * 50
+def screen(text):
+    text = str(text)
+    markdown_symbols = r'*_~`[]()'
+    escaped_symbols = re.escape(markdown_symbols)
+    return re.sub(f"([{escaped_symbols}])", r"\\\1", text)
 
 def calc_date(plus):
     current_date = datetime.now()
