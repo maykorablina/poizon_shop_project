@@ -72,6 +72,10 @@ async def check_subscribe(callback: types.CallbackQuery):
     if await is_user_subscribed(text['subscribe']['channel_name'], callback.from_user.id):
         await bot.send_message(chat_id=callback.from_user.id, text=text['subscribe']['check_success'], )
         await bot.delete_message(message_id=callback.message.message_id, chat_id=callback.from_user.id)
+        photo = FSInputFile('source/alterium_logo.jpg')
+        await bot.send_photo(photo=photo, chat_id=callback.from_user.id, caption=text['menu']['message'],
+                             reply_markup=kb.main_keyboard(chat_id=callback.from_user.id, admins=[ADMIN_ID]),
+                             parse_mode='Markdown')
     else:
         await callback.answer(text=text['subscribe']['check_failure'])
 
