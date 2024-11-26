@@ -15,6 +15,7 @@ load_dotenv()
 global YUAN_RATE
 YUAN_RATE = float(os.getenv('YUAN_RATE'))
 TOKEN_API = os.getenv('TOKEN_API')
+global tariffs
 tariffs = funcs.load_tariffs()
 ADMIN_ID = int(os.getenv('ADMIN_ID'))
 DEV_ID = int(os.getenv('DEV_ID'))

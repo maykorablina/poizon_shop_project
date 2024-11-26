@@ -15,16 +15,26 @@ def back_menu_keyboard():
 def main_keyboard(chat_id: int, admins: list[int]) -> InlineKeyboardMarkup:
 
     builder = InlineKeyboardBuilder()
+    # builder.row(
+    #     InlineKeyboardButton(
+    #         text=text['menu']['faq'], url=text['menu']['faq_link']
+    #     ),
+    #     InlineKeyboardButton(
+    #         text=text['menu']['wiki'], url=text['menu']['wiki_link']
+    #     ),
+    #     InlineKeyboardButton(
+    #         text=text['menu']['reviews'], url=text['menu']['reviews_link']
+    #     )
+    # )
+    builder.row(
+        InlineKeyboardButton(
+            text=text['menu']['faq'], url=text['menu']['faq_link']
+        )
+    )
     builder.row(
         InlineKeyboardButton(
             text=text['menu']['faq'], url=text['menu']['faq_link']
         ),
-        InlineKeyboardButton(
-            text=text['menu']['wiki'], url=text['menu']['wiki_link']
-        ),
-        InlineKeyboardButton(
-            text=text['menu']['reviews'], url=text['menu']['reviews_link']
-        )
     )
     builder.row(
         InlineKeyboardButton(
