@@ -1,7 +1,7 @@
 {
     "delivery_time": {
         "avia": [
-            "7",
+            "6",
             "8"
         ],
         "auto": [
@@ -12,38 +12,48 @@
     "tariffs": {
         "1": {
             "category": "Обувь до 41",
-            "avia": 320,
-            "auto": 135
+            "avia": 3200,
+            "auto": 1350
         },
         "2": {
             "category": "Обувь после 41",
-            "avia": 355,
-            "auto": 135
+            "avia": 3550,
+            "auto": 1350
+        },
+        "3": {
+            "category": "Верхняя одежда",
+            "avia": 3550,
+            "auto": 1350
         },
         "4": {
             "category": "Футболки, шорты",
-            "avia": 155,
-            "auto": 85
+            "avia": 1550,
+            "auto": 850
         },
         "5": {
             "category": "Худи, штаны",
-            "avia": 220,
-            "auto": 95
+            "avia": 2200,
+            "auto": 950
         },
         "6": {
             "category": "Парфюмерия",
-            "avia": 300,
+            "avia": 3000,
             "auto": null
         },
         "7": {
-            "category": "Телефоны",
-            "avia": 155,
-            "auto": 85
+            "category": "Сумки",
+            "avia": 3100,
+            "auto": 1650
         },
         "8": {
             "category": "Косметика",
-            "avia": 220,
-            "auto": 95
+            "avia": 1500,
+            "auto": 850
+        },
+        "9": {
+            "category": "Аксессуары",
+            "avia": 3000,
+            "auto": 800
         }
     }
 }

@@ -33,7 +33,7 @@ def main_keyboard(chat_id: int, admins: list[int]) -> InlineKeyboardMarkup:
     )
     builder.row(
         InlineKeyboardButton(
-            text=text['menu']['faq'], url=text['menu']['faq_link']
+            text=text['menu']['wiki'], url=text['menu']['wiki_link']
         ),
     )
     builder.row(

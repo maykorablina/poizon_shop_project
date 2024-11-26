@@ -10,6 +10,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.enums import ContentType, ChatMemberStatus
 from aiogram.fsm.context import FSMContext
 from source import functions as funcs
+from aiogram.types import FSInputFile
 
 load_dotenv()
 global YUAN_RATE
@@ -48,16 +49,23 @@ async def beginning(message, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text=text['subscribe']['please_subscribe'],
                                reply_markup=kb.subscribe_to_channel(), parse_mode='Markdown')
     else:
-        await bot.send_message(chat_id=chat_id, text=text['menu']['message'],
+        photo = FSInputFile('source/alterium_logo.jpg')
+        await bot.send_photo(photo= photo, chat_id=chat_id, caption=text['menu']['message'],
                                reply_markup=kb.main_keyboard(chat_id=chat_id, admins=[ADMIN_ID]),
                                parse_mode='Markdown')
 
 @dp.message(Command("menu"))
 async def menu(message, state: FSMContext):
     await state.clear()
-    await bot.send_message(chat_id=message.chat.id, text=text['menu']['message'],
-                           reply_markup=kb.main_keyboard(chat_id=message.chat.id, admins=[ADMIN_ID]),
-                           parse_mode='Markdown')
+    chat_id = message.chat.id
+    if not await is_user_subscribed(text['subscribe']['channel_name'], chat_id):
+        await bot.send_message(chat_id=chat_id, text=text['subscribe']['please_subscribe'],
+                               reply_markup=kb.subscribe_to_channel(), parse_mode='Markdown')
+    else:
+        photo = FSInputFile('source/alterium_logo.jpg')
+        await bot.send_photo(photo=photo, chat_id=message.chat.id, caption=text['menu']['message'],
+                             reply_markup=kb.main_keyboard(chat_id=message.chat.id, admins=[ADMIN_ID]),
+                             parse_mode='Markdown')
 
 @dp.callback_query(F.data.startswith('check_subscribe'))
 async def check_subscribe(callback: types.CallbackQuery):
@@ -147,11 +155,24 @@ async def set_delivery(callback: types.CallbackQuery, state: FSMContext):
         "price_with_comissions": int(funcs.round_to_50(
             data['price_yuan'] * YUAN_RATE * 1.08 * (1 if data['price_yuan'] < 1500 else 1.03)))
     }
-    await bot.send_message(chat_id=callback.from_user.id,
-                           text=text["calculator"]["choose_delivery"].format(**product_info),
-                           reply_markup=kb.del_type_keyboard(tariffs['tariffs'], cat_id),
-                           parse_mode='Markdown'
-                           )
+    if not avia_flag:
+        await bot.send_message(chat_id=callback.from_user.id,
+                               text=text["calculator"]["choose_delivery_no_avia"].format(**product_info),
+                               reply_markup=kb.del_type_keyboard(tariffs['tariffs'], cat_id),
+                               parse_mode='Markdown'
+                               )
+    if not auto_flag:
+        await bot.send_message(chat_id=callback.from_user.id,
+                               text=text["calculator"]["choose_delivery_no_auto"].format(**product_info),
+                               reply_markup=kb.del_type_keyboard(tariffs['tariffs'], cat_id),
+                               parse_mode='Markdown'
+                               )
+    else:
+        await bot.send_message(chat_id=callback.from_user.id,
+                               text=text["calculator"]["choose_delivery"].format(**product_info),
+                               reply_markup=kb.del_type_keyboard(tariffs['tariffs'], cat_id),
+                               parse_mode='Markdown'
+                               )
     await state.set_state(Calculator.del_way)
 
 
@@ -168,6 +189,9 @@ async def set_delivery(callback: types.CallbackQuery, state: FSMContext):
         "final_price": int(funcs.round_to_50(
             data['price_yuan'] * YUAN_RATE * (1 if data['price_yuan'] < 1500 else 1.03) * 1.08 +
             category_info[data['del_way']])),
+        "del_duration": funcs.screen(
+            ('-'.join(funcs.calc_date(tariffs['delivery_time'][data['del_way']])))
+        )
     }
 
     await bot.send_message(chat_id=callback.from_user.id, text=text["calculator"]["final_price"].format(**order_info),
@@ -342,6 +366,7 @@ async def edit(callback: types.CallbackQuery, state: FSMContext):
 
 @dp.message(EditCats.edit)
 async def set_new(message: types.Message, state: FSMContext):
+    global tariffs
     await state.update_data(edit=message.text)
     data = await state.get_data()
     new_value = data['edit']
